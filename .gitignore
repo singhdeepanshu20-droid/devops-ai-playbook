@@ -34,3 +34,6 @@ Thumbs.db
 
 # Environment variables
 .env
+
+# Local notes (do not push)
+devops-flowchart.md
