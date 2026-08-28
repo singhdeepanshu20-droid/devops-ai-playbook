@@ -83,19 +83,39 @@ jobs:
           ACCOUNT=${{ secrets.AWS_ACCOUNT_ID }}
           REGION=${{ secrets.AWS_REGION }}
 
-          # Fetch latest remote and rebase BEFORE making changes
-          git fetch origin main
-          git rebase origin/main
+          for attempt in 1 2 3 4 5; do
+            echo "Attempt $attempt of 5..."
 
-          # Apply image tag updates to all manifests
-          for SERVICE in auth gateway orders order-service product-service user-service; do
-            MANIFEST="gitops/k8s/backend/${SERVICE}.yml"
-            sed -i "s|${ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${SERVICE}:.*|${ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${SERVICE}:${NEW_TAG}|g" $MANIFEST
+            # Always reset to latest remote state before making changes
+            git fetch origin main
+            git reset --hard origin/main
+
+            # Apply image tag updates to all manifests
+            for SERVICE in auth gateway orders order-service product-service user-service; do
+              MANIFEST="gitops/k8s/backend/${SERVICE}.yml"
+              sed -i "s|${ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${SERVICE}:.*|${ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/${SERVICE}:${NEW_TAG}|g" $MANIFEST
+            done
+
+            sed -i "s|${ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/frontend:.*|${ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/frontend:${NEW_TAG}|g" gitops/k8s/frontend/deployment.yml
+
+            git add gitops/k8s/
+
+            # Skip push if nothing changed
+            if git diff --staged --quiet; then
+              echo "No changes to commit. Exiting."
+              exit 0
+            fi
+
+            git commit -m "ci: update image tags to ${NEW_TAG}"
+
+            if git push origin main; then
+              echo "Push successful!"
+              exit 0
+            fi
+
+            echo "Push failed. Retrying..."
+            git reset HEAD~1
           done
 
-          sed -i "s|${ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/frontend:.*|${ACCOUNT}.dkr.ecr.${REGION}.amazonaws.com/frontend:${NEW_TAG}|g" gitops/k8s/frontend/deployment.yml
-
-          # Commit and push only if there are changes
-          git add gitops/k8s/
-          git diff --staged --quiet || git commit -m "ci: update image tags to ${NEW_TAG}"
-          git push origin main
+          echo "All 5 push attempts failed."
+          exit 1
