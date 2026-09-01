@@ -1,6 +1,6 @@
-# AIOps Assistant — Kira
+# AIOps Assistant — IRON MAN
 
-An AI-powered SRE assistant built on AWS Bedrock Agent. Kira diagnoses production incidents by querying CloudWatch Logs, CloudWatch Metrics (via Prometheus), and EKS cluster health — then responds with root cause, evidence, and fix recommendations.
+An AI-powered SRE assistant built on AWS Bedrock Agent. IRON MAN diagnoses production incidents by querying CloudWatch Logs, CloudWatch Metrics (via Prometheus), and EKS cluster health — then responds with root cause, evidence, and fix recommendations.
 
 ---
 
@@ -10,7 +10,7 @@ An AI-powered SRE assistant built on AWS Bedrock Agent. Kira diagnoses productio
 Streamlit UI (app.py)
       │
       ▼
-Bedrock Agent (Kira)
+Bedrock Agent (IRON MAN)
       │
       ├── fetch_logs         → CloudWatch Logs
       ├── fetch_metrics      → Prometheus (ELB endpoint)
@@ -91,7 +91,7 @@ kubectl get svc kube-prometheus-stack-prometheus -n monitoring
 Run the deploy script. It will:
 - Verify the Lambda functions and IAM role exist
 - Set Lambda timeouts to 30s and add Bedrock invoke permissions
-- Create the Bedrock Agent (`aiops-assistant`) with the Kira system prompt
+- Create the Bedrock Agent (`aiops-assistant`) with the IRON MAN system prompt
 - Attach all 3 action groups with their OpenAPI schemas
 - Prepare the agent
 
@@ -106,7 +106,7 @@ At the end, the script prints your **Agent ID** — keep it for the next step.
 
 ## Step 5: (Optional) Generate Sample Data
 
-Populate CloudWatch Logs with realistic error scenarios to test Kira:
+Populate CloudWatch Logs with realistic error scenarios to test IRON MAN:
 
 ```bash
 python3 scripts/generate_sample_data.py --region us-east-1
@@ -169,7 +169,7 @@ aiops-assistant/
 
 ---
 
-## Sample Questions to Ask Kira
+## Sample Questions to Ask IRON MAN
 
 - Why are we seeing 503 errors in the last hour?
 - Is CPU usage high across the boutique services?
