@@ -5,6 +5,11 @@ WORKDIR /app
 
 # Copy package files
 COPY package*.json ./
+
+# Remove lock file to force fresh resolution
+RUN rm -f package-lock.json
+
+# Install with fresh dependency resolution
 RUN npm install --production=false
 
 # Copy source code
