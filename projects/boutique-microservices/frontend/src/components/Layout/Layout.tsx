@@ -1,161 +1,88 @@
 import React from 'react';
-import { Outlet, Link as RouterLink, useNavigate } from 'react-router-dom';
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Box,
-  IconButton,
-  Badge,
-  Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-} from '@mui/material';
-import {
-  ShoppingCart,
-  AccountCircle,
-  Home,
-  ShoppingBag,
-  Menu as MenuIcon,
-} from '@mui/icons-material';
+import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useCart } from '../../contexts/CartContext';
-import { useState } from 'react';
-
-const drawerWidth = 240;
 
 const Layout: React.FC = () => {
-  const { isAuthenticated, user, logout } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
   const { itemCount } = useCart();
-  const [mobileOpen, setMobileOpen] = useState(false);
   const navigate = useNavigate();
 
-  const handleDrawerToggle = () => {
-    setMobileOpen(!mobileOpen);
-  };
-
-  const drawer = (
-    <Box>
-      <Toolbar>
-        <Typography variant="h6" noWrap component="div">
-          Boutique
-        </Typography>
-      </Toolbar>
-      <List>
-        <ListItem component={RouterLink} to="/">
-          <ListItemIcon>
-            <Home />
-          </ListItemIcon>
-          <ListItemText primary="Home" />
-        </ListItem>
-        <ListItem component={RouterLink} to="/products">
-          <ListItemIcon>
-            <ShoppingBag />
-          </ListItemIcon>
-          <ListItemText primary="Products" />
-        </ListItem>
-        {isAuthenticated && (
-          <>
-            <ListItem component={RouterLink} to="/orders">
-              <ListItemIcon>
-                <ShoppingBag />
-              </ListItemIcon>
-              <ListItemText primary="Orders" />
-            </ListItem>
-            <ListItem component={RouterLink} to="/profile">
-              <ListItemIcon>
-                <AccountCircle />
-              </ListItemIcon>
-              <ListItemText primary="Profile" />
-            </ListItem>
-          </>
-        )}
-      </List>
-    </Box>
-  );
-
   return (
-    <Box sx={{ display: 'flex' }}>
-      <AppBar
-        position="fixed"
-        sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
-        }}
-      >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: 'none' } }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-            Luxury Boutique
-          </Typography>
-          <IconButton color="inherit" onClick={() => navigate('/cart')}>
-            <Badge badgeContent={itemCount} color="error">
-              <ShoppingCart />
-            </Badge>
-          </IconButton>
-          {isAuthenticated ? (
-            <IconButton color="inherit" onClick={logout}>
-              <AccountCircle />
-            </IconButton>
-          ) : (
-            <IconButton color="inherit" onClick={() => navigate('/login')}>
-              <AccountCircle />
-            </IconButton>
+    <div style={{ fontFamily: 'Inter, sans-serif', minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#fafafa' }}>
+      <header style={{
+        backgroundColor: '#1a1a1a',
+        color: '#ffffff',
+        padding: '1rem 2rem',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+      }}>
+        <div style={{ fontSize: '1.5rem', fontWeight: 'bold', fontFamily: 'Playfair Display, serif' }}>
+          <Link to="/" style={{ color: '#ffffff', textDecoration: 'none' }}>Luxury Boutique</Link>
+        </div>
+        <nav style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+          <Link to="/" style={{ color: '#ffffff', textDecoration: 'none', fontWeight: 500 }}>Home</Link>
+          <Link to="/products" style={{ color: '#ffffff', textDecoration: 'none', fontWeight: 500 }}>Products</Link>
+          {isAuthenticated && (
+            <>
+              <Link to="/orders" style={{ color: '#ffffff', textDecoration: 'none', fontWeight: 500 }}>Orders</Link>
+              <Link to="/profile" style={{ color: '#ffffff', textDecoration: 'none', fontWeight: 500 }}>Profile</Link>
+            </>
           )}
-        </Toolbar>
-      </AppBar>
-      <Box
-        component="nav"
-        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-        aria-label="mailbox folders"
-      >
-        <Drawer
-          variant="temporary"
-          open={mobileOpen}
-          onClose={handleDrawerToggle}
-          ModalProps={{
-            keepMounted: true,
-          }}
-          sx={{
-            display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-          }}
-        >
-          {drawer}
-        </Drawer>
-        <Drawer
-          variant="permanent"
-          sx={{
-            display: { xs: 'none', sm: 'block' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-          }}
-          open
-        >
-          {drawer}
-        </Drawer>
-      </Box>
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: 3,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-        }}
-      >
-        <Toolbar />
+          <button
+            onClick={() => navigate('/cart')}
+            style={{
+              backgroundColor: '#d4af37',
+              color: '#000',
+              border: 'none',
+              borderRadius: '6px',
+              padding: '0.5rem 1rem',
+              fontWeight: 600,
+              cursor: 'pointer'
+            }}
+          >
+            Cart ({itemCount})
+          </button>
+          {isAuthenticated ? (
+            <button
+              onClick={logout}
+              style={{
+                backgroundColor: 'transparent',
+                color: '#ffffff',
+                border: '1px solid #ffffff',
+                borderRadius: '6px',
+                padding: '0.5rem 1rem',
+                cursor: 'pointer'
+              }}
+            >
+              Logout
+            </button>
+          ) : (
+            <Link
+              to="/login"
+              style={{
+                backgroundColor: '#ffffff',
+                color: '#1a1a1a',
+                textDecoration: 'none',
+                borderRadius: '6px',
+                padding: '0.5rem 1rem',
+                fontWeight: 600
+              }}
+            >
+              Login
+            </Link>
+          )}
+        </nav>
+      </header>
+      <main style={{ flex: 1, padding: '2rem', maxWidth: '1200px', margin: '0 auto', width: '100%', boxSizing: 'border-box' }}>
         <Outlet />
-      </Box>
-    </Box>
+      </main>
+      <footer style={{ backgroundColor: '#1a1a1a', color: '#888888', textAlign: 'center', padding: '1.5rem', marginTop: 'auto' }}>
+        <p style={{ margin: 0 }}>&copy; {new Date().getFullYear()} Luxury Boutique. All rights reserved.</p>
+      </footer>
+    </div>
   );
 };
 

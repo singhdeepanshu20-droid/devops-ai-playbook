@@ -1,16 +1,4 @@
 import React, { useState } from 'react';
-import {
-  Box,
-  TextField,
-  InputAdornment,
-  IconButton,
-  Autocomplete,
-  Chip,
-} from '@mui/material';
-import {
-  Search as SearchIcon,
-  Clear as ClearIcon,
-} from '@mui/icons-material';
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
@@ -20,7 +8,6 @@ interface SearchBarProps {
 
 const SearchBar: React.FC<SearchBarProps> = ({
   onSearch,
-  suggestions = [],
   placeholder = "Search luxury products...",
 }) => {
   const [query, setQuery] = useState('');
@@ -36,84 +23,50 @@ const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   return (
-    <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%' }}>
-      <TextField
-        fullWidth
-        variant="outlined"
+    <form onSubmit={handleSubmit} style={{ display: 'flex', gap: '0.5rem', width: '100%' }}>
+      <input
+        type="text"
         placeholder={placeholder}
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon color="action" />
-            </InputAdornment>
-          ),
-          endAdornment: query && (
-            <InputAdornment position="end">
-              <IconButton onClick={handleClear} size="small">
-                <ClearIcon />
-              </IconButton>
-            </InputAdornment>
-          ),
-          sx: {
-            backgroundColor: 'background.paper',
-            borderRadius: 2,
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': {
-                borderColor: 'divider',
-              },
-              '&:hover fieldset': {
-                borderColor: 'primary.main',
-              },
-              '&.Mui-focused fieldset': {
-                borderColor: 'primary.main',
-              },
-            },
-          },
-        }}
-        sx={{
-          '& .MuiInputLabel-root': {
-            fontSize: '1.1rem',
-          },
+        style={{
+          flex: 1,
+          padding: '0.75rem 1rem',
+          borderRadius: '6px',
+          border: '1px solid #ccc',
+          fontSize: '1rem'
         }}
       />
-      
-      {suggestions.length > 0 && query && (
-        <Box sx={{ mt: 1 }}>
-          <Autocomplete
-            options={suggestions}
-            value={[query].filter(Boolean)}
-            onChange={(_, newValue) => {
-              const newQuery = Array.isArray(newValue) ? newValue[0] : newValue;
-              setQuery(newQuery || '');
-              onSearch(newQuery || '');
-            }}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                variant="outlined"
-                size="small"
-                placeholder="Suggestions"
-              />
-            )}
-            renderTags={(value, getTagProps) =>
-              value.map((option, index) => (
-                <Chip
-                  variant="outlined"
-                  size="small"
-                  label={option}
-                  {...getTagProps({ index })}
-                  sx={{ mr: 0.5, mb: 0.5 }}
-                />
-              ))
-            }
-            multiple
-            freeSolo
-          />
-        </Box>
+      {query && (
+        <button
+          type="button"
+          onClick={handleClear}
+          style={{
+            padding: '0.75rem 1rem',
+            backgroundColor: '#eee',
+            border: 'none',
+            borderRadius: '6px',
+            cursor: 'pointer'
+          }}
+        >
+          Clear
+        </button>
       )}
-    </Box>
+      <button
+        type="submit"
+        style={{
+          padding: '0.75rem 1.5rem',
+          backgroundColor: '#1a1a1a',
+          color: '#fff',
+          border: 'none',
+          borderRadius: '6px',
+          fontWeight: 600,
+          cursor: 'pointer'
+        }}
+      >
+        Search
+      </button>
+    </form>
   );
 };
 

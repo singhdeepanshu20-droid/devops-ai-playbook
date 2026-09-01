@@ -5,11 +5,7 @@ WORKDIR /app
 
 # Copy package files
 COPY package*.json ./
-
-# Clean npm cache and remove any old node_modules to force fresh resolution
-RUN npm cache clean --force && rm -rf node_modules package-lock.json
-
-# Install with fresh dependency resolution
+RUN rm -f package-lock.json
 RUN npm install --production=false
 
 # Copy source code
