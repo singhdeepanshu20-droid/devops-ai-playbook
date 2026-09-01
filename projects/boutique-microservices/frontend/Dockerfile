@@ -3,6 +3,7 @@ FROM node:20-alpine
 
 WORKDIR /app
 
+
 # Prevent react-scripts from treating warnings as fatal errors in CI
 ENV CI=false
 ENV DISABLE_ESLINT_PLUGIN=true
