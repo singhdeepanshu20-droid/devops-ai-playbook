@@ -9,7 +9,7 @@
     "@fontsource/playfair-display": "^5.2.8",
     "@mui/icons-material": "^7.3.7",
     "@mui/material": "^7.3.7",
-    "@mui/utils": "^5.15.0",
+    "@mui/utils": "^7.3.7",
     "@mui/x-data-grid": "^8.26.0",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
