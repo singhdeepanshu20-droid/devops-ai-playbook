@@ -13,7 +13,7 @@
 
 set -euo pipefail
 
-REGION="us-east-1"
+REGION="ap-southeast-2"
 ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 
 echo ""
@@ -54,7 +54,7 @@ else
   aws iam create-role \
     --role-name "$LAMBDA_ROLE_NAME" \
     --assume-role-policy-document "$LAMBDA_TRUST_POLICY" \
-    --description "Role for AIOps Lambda functions — fetch logs, metrics, and EKS health" \
+    --description "Role for AIOps Lambda functions - fetch logs, metrics, and EKS health" \
     --query 'Role.RoleName' --output text
   echo "  ✓ Created: $LAMBDA_ROLE_NAME"
 fi
@@ -140,7 +140,7 @@ else
   aws iam create-role \
     --role-name "$AGENT_ROLE_NAME" \
     --assume-role-policy-document "$BEDROCK_TRUST_POLICY" \
-    --description "Role for Bedrock Agent — AIOps assistant (IRON MAN)" \
+    --description "Role for Bedrock Agent - AIOps assistant (IRON MAN)" \
     --query 'Role.RoleName' --output text
   echo "  ✓ Created: $AGENT_ROLE_NAME"
 fi

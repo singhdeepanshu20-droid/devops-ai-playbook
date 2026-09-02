@@ -20,7 +20,7 @@
 
 set -euo pipefail
 
-REGION="us-east-1"
+REGION="ap-southeast-2"
 ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 AGENT_ROLE_NAME="aiops-bedrock-agent-role"
 AGENT_NAME="aiops-assistant"

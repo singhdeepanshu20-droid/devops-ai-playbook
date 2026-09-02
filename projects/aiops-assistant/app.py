@@ -154,9 +154,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 
-# --- Validate Config ---
-# Access keys optional: boto3 uses ~/.aws/credentials, SSO, env, or IAM role if unset.
-config_ok = bool(AGENT_ID and AGENT_ALIAS_ID)
+config_ok = True
 
 
 # --- Initialize Session State ---
@@ -178,27 +176,12 @@ def get_bedrock_client():
     return boto3.client(**kwargs)
 
 
+from agentcore_runner import run_agent_loop
+
 def invoke_agent(prompt: str) -> str:
-    """Send a message to the Bedrock Agent and get the response."""
-    client = get_bedrock_client()
-
+    """Send a message to the AgentCore runner and get the response."""
     try:
-        response = client.invoke_agent(
-            agentId=AGENT_ID,
-            agentAliasId=AGENT_ALIAS_ID,
-            sessionId=st.session_state.session_id,
-            inputText=prompt,
-        )
-
-        full_response = ""
-        for event in response["completion"]:
-            if "chunk" in event:
-                chunk = event["chunk"]
-                if "bytes" in chunk:
-                    full_response += chunk["bytes"].decode("utf-8")
-
-        return full_response
-
+        return run_agent_loop(prompt)
     except Exception as e:
         return f"⚠️ Error: {str(e)}"
 
@@ -243,7 +226,7 @@ st.markdown(f"""
     <span style="color: #2a3040;">|</span>
     <span style="color: #5a6270;">Region: {AWS_REGION}</span>
     <span style="color: #2a3040;">|</span>
-    <span style="color: #5a6270;">Agent: {AGENT_ID}</span>
+    <span style="color: #5a6270;">Agent: {AGENT_ID or "AgentCore"}</span>
 </div>
 """, unsafe_allow_html=True)
 
